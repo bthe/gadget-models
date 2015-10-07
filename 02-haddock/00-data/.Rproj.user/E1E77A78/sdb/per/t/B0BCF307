@@ -1,0 +1,17 @@
+{
+    "contents" : "; main file for the gadget-model model\n; created using rgadget at 2015-07-03\ntimefile\ttime\nareafile\tarea\nprintfiles\t;\n[stock]\nstockfiles\tcodimm\tcodmat\n[tagging]\n[otherfood]\n[fleet]\nfleetfiles\tModelfiles/fleets\n[likelihood] \nlikelihoodfiles likelihood\n;",
+    "created" : 1435942582900.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1005108699",
+    "id" : "B0BCF307",
+    "lastKnownWriteTime" : 1435942627,
+    "path" : "~/Dropbox/gadget-models/01-cod/02-mfdbcod/main",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "type" : "text"
+}

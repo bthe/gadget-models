@@ -1,0 +1,17 @@
+{
+    "contents" : "library(mfdb)\n## Create a gadget directory, define some defaults to use with our queries below\ngd <- gadget_directory(\"../02-mfdbcod\")\n\nmdb<-mfdb('Iceland')\n\nreitmapping <- read.table(\n        system.file(\"demo-data\", \"reitmapping.tsv\", package=\"mfdb\"),\n        header=TRUE,\n        as.is=TRUE)\n\n\ndefaults <- list(\n    area = mfdb_group(\"1\" = unique(reitmapping$SUBDIVISION)),\n    timestep = mfdb_timestep_quarterly,\n    year = 1980:2015,\n    species = 'COD')\n## Write out areafile and update mainfile with areafile location\ngadget_dir_write(gd, gadget_areafile(\n    size = mfdb_area_size(mdb, defaults)[[1]],\n    temperature = mfdb_temperature(mdb, defaults)[[1]]))\n## Write a penalty component to the likelihood file\ngadget_dir_write(gd, gadget_likelihood_component(\"penalty\",\n                                                 name = \"bounds\",\n                                                 weight = \"0.5\",\n                                                 data = data.frame(\n                                                     switch = c(\"default\"),\n                                                     power = c(2),\n                                                     stringsAsFactors = FALSE)))\n\n\n\nsource('setup-fleets.R')\nsource('setup-model.R')\nsource('setup-catchdistribution.R')\nsource('setup-indices.R')\nsource('setup-catchstatistics.R')\n",
+    "created" : 1435852973566.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2043199475",
+    "id" : "31908B93",
+    "lastKnownWriteTime" : 1438960493,
+    "path" : "~/Dropbox/gadget-models/01-cod/00-data/setup.R",
+    "project_path" : "setup.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

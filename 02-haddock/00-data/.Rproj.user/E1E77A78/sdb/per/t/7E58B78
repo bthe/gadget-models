@@ -1,0 +1,17 @@
+{
+    "contents" : "; stock definition file for codimm created using rgadget\n; at 2015-07-03\n;\nstockname\tcodimm\nlivesonareas\t1\nminage\t1\nmaxage\t10\nminlength\t4\nmaxlength\t130\ndl\t2\nrefweightfile\t./Data/codimm.refweightfile\ngrowthandeatlengths\t./Aggfiles/codimm.len.agg\ndoesgrow\t1\ngrowthfunction\tlengthvbsimple\ngrowthparameters\t#Linf\t( * 0.001 #k)\t6.5e-06\t3.07\nbeta\t(* 10 #bbin)\nmaxlengthgroupgrowth\t15\nnaturalmortality\t0.5\t0.35\t0.2\t0.2\t0.2\t0.2\t0.2\t0.2\t0.2\t0.3\niseaten\t1\npreylengths\t.//Aggfiles/codimm.prey.agg\nenergycontent\t1\ndoeseat\t0\n;\nInitialconditions\nminage\t1\nmaxage\t10\nminlength\t4\nmaxlength\t130\ndl\t2\nsdev\t1\nnormalparamfile\t./Modelfiles/codimm.normalparam\ndoesmigrate\t0\n;\ndoesmature\t1\nmaturityfunction\tcontinuous\nmaturityfile\tModelfiles/codimm.maturity\ndoesmove\t1\ntransitionstocksandratios codmat  1\ntransitionstep 4\ndoesrenew\t1\nminlength\t4\nmaxlength\t28\nnormalparamfile\t./Modelfiles/codimm.rec\ndoesspawn\t0\n;\ndoesstray\t0\n;\n",
+    "created" : 1435938943904.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "984713541",
+    "id" : "7E58B78",
+    "lastKnownWriteTime" : 1435938948,
+    "path" : "~/Dropbox/gadget-models/01-cod/02-mfdbcod/codimm",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "type" : "text"
+}

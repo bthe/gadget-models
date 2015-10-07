@@ -1,0 +1,17 @@
+{
+    "contents" : "; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\toldfleet\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #oldfleet.alpha #oldfleet.l50\ncodmat function exponentiall50 #oldfleet.alpha #oldfleet.l50\namount\tData/oldfleet.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\tigfs\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #igfs.alpha #igfs.l50\ncodmat function exponentiall50 #igfs.alpha #igfs.l50\namount\tData/igfs.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\taut\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #aut.alpha #aut.l50\ncodmat function exponentiall50 #aut.alpha #aut.l50\namount\tData/aut.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\tlln\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #lln.alpha #lln.l50\ncodmat function exponentiall50 #lln.alpha #lln.l50\namount\tData/lln.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\tgil\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #gil.alpha #gil.l50\ncodmat function exponentiall50 #gil.alpha #gil.l50\namount\tData/gil.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\tbmt\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #bmt.alpha #bmt.l50\ncodmat function exponentiall50 #bmt.alpha #bmt.l50\namount\tData/bmt.amount\n;\n; fleet file created in Rgadget\n; ../02-mfdbcod - 2015-07-03\n[fleetcomponent]\ntotalfleet\tforeign\nlivesonareas\t1\nmultiplicative\t1\nsuitability\ncodimm function exponentiall50 #oldfleet.alpha #oldfleet.l50\ncodmat function exponentiall50 #oldfleet.alpha #oldfleet.l50\namount\tData/foreign.amount\n;\n",
+    "created" : 1435938865138.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1725479588",
+    "id" : "CE2BE5AC",
+    "lastKnownWriteTime" : 1435938886,
+    "path" : "~/Dropbox/gadget-models/01-cod/02-mfdbcod/Modelfiles/fleets",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "text"
+}
