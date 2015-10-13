@@ -114,8 +114,8 @@ init.params[c('ling.Linf','ling.k','ling.bbin','ling.mult',
               grep('age',rownames(init.params),value=TRUE),
               'ling.mat1','ling.mat2'),] <- 
   read.table(text='switch	 value 		lower 	upper 	optimise
-ling.Linf	         110	      80     2000        0
-ling.k	          90	       1      200        1
+ling.Linf	         180	      80     200        0
+ling.k	          90	       60      100        1
 ling.bbin	         6	   1e-08    100        1
 ling.mult	         100	     0.1      100        1
 ling.age2	         35	    0.01     150        1
@@ -133,7 +133,7 @@ ling.mat2	          70	      30      100        1',header=TRUE)
 init.params$switch <- rownames(init.params)
 
 init.params[grepl('rec[0-9]',init.params$switch),'value'] <- 1
-init.params[grepl('rec[0-9]',init.params$switch),'upper'] <- 3
+init.params[grepl('rec[0-9]',init.params$switch),'upper'] <- 4
 init.params[grepl('rec[0-9]',init.params$switch),'lower'] <- 0.001
 init.params[grepl('rec[0-9]',init.params$switch),'optimise'] <- 1
 

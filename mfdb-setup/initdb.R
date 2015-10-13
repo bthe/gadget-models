@@ -9,12 +9,13 @@ library(dplyr)
 library(stringr)
 library(dplyrOracle)
 library(reshape2)
+library(tidyr)
 
 ## oracle connection
 mar <- dplyrOracle::src_oracle("mar")
 
 ## Create connection to MFDB database, as the Icelandic case study
-mdb <- mfdb('Iceland',db_params=list(host='hafgeimur.hafro.is'))
+mdb <- mfdb('Iceland')#,db_params=list(host='hafgeimur.hafro.is'))
 #species.key <-
 #    mfdb:::mfdb_fetch(mdb,"select * from species where name in",
 #                      "('COD','HAD','POK','WHG','WHB','USK','REB',",
@@ -86,13 +87,14 @@ mfdb_import_temperature(mdb, data.frame(
 ## Set-up some sampling types
 
 mfdb_import_sampling_type(mdb, data.frame(
-    id = 1:11,
-    name = c('SEA', 'IGFS','AUT','SMN','LND','LOG','INS','ACU','FLND','OLND','CAA'),
+    id = 1:12,
+    name = c('SEA', 'IGFS','AUT','SMN','LND','LOG','INS','ACU','FLND','OLND','CAA',
+             'CAP'),
     description = c('Sea sampling', 'Icelandic ground fish survey',
         'Icelandic autumn survey','Icelandic gillnet survey',
         'Landings','Logbooks','Icelandic nephrop survey',
         'Acoustic capelin survey','Foreign vessel landings','Old landings (pre 1981)',
-        'Old catch at age')))
+        'Old catch at age','Capelin data')))
 
 
 ## Import length distribution from commercial catches
@@ -175,6 +177,86 @@ rm(aldist)
 
 
 
+## capelin data
+
+stations <-
+    data.table(subset(stodvar,
+                      synaflokkur %in% c(10,12),
+                      select = c(synis.id,ar,man,lat,lon,veidarfaeri))) %>%
+    left_join(data.table(mapping)) %>%
+    group_by(synis.id) %>%
+    mutate(areacell = d2sr(lat,lon),
+           veidarfaeri = NULL) %>%
+    filter(areacell %in% reitmapping$GRIDCELL &
+           !is.na(gear))
+           
+ldist <- data.table(all.le) %>%
+    filter(synis.id %in% stations$synis.id &
+           tegund %in% species.key$tegund) %>%
+    group_by(synis.id,tegund) %>%
+    left_join(stations) %>%
+    left_join(species.key) %>%
+    left_join(data.table(all.nu)) %>%
+    mutate(count=fjoldi,
+           sex = c('M','F')[pmax(1,kyn)],
+           age = 0,
+           month = man,
+           sampling_type = 'CAP',
+           maturity_stage = pmax(1,pmin(kynthroski,2))) %>%
+    filter(!is.na(areacell)) %>%
+    ungroup() %>%
+    mutate(man = NULL,
+           fjoldi = NULL,
+           kyn = NULL,
+           kynthroski=NULL,
+           tegund = NULL) 
+    
+setnames(ldist,
+         c('synis.id','ar','lengd'),
+         c('sample.id','year','length'))
+
+mfdb_import_survey(mdb,
+                   data_source = 'iceland-ldist.cap',
+                   ldist)
+rm(ldist)
+
+
+## Import age-length frequencies
+aldist <-
+    data.table(all.kv) %>%
+    filter(synis.id %in% stations$synis.id &
+           tegund %in% species.key$tegund) %>%
+    group_by(synis.id,tegund) %>%
+    left_join(stations) %>%
+    left_join(species.key) %>%
+    mutate(count=1,           
+           sex = c('M','F')[pmax(1,kyn)],
+           age = aldur,
+           sampling_type = 'CAP',
+           month = man,
+           maturity_stage = pmax(1,pmin(kynthroski,2))) %>%
+    filter(!is.na(areacell)) %>%
+    ungroup() %>%
+    mutate(man = NULL,
+           kyn = NULL,
+           kynthroski=NULL,
+           tegund = NULL,
+           aldur=NULL)
+               
+setnames(aldist,
+         c('synis.id','ar','lengd', 'nr',
+           'oslaegt', 'slaegt', 'lifur','kynfaeri'),
+         c('sample.id','year','length','no',
+           'weight','gutted','liver', 'gonad'))
+
+mfdb_import_survey(mdb,
+                   data_source = 'iceland-aldist.cap',
+                   aldist)
+
+rm(aldist)
+
+
+
 ## surveys
 ## TODO: gillent and nephrop surveys
 
@@ -249,9 +331,9 @@ aldist <- data.table(all.kv) %>%
            aldur=NULL)           
     
 setnames(aldist,
-         c('synis.id','ar','lengd', 'nr',
+         c('synis.id','lengd', 'nr',
            'oslaegt', 'slaegt', 'lifur','kynfaeri'),
-         c('sample.id','year','length','no',
+         c('sample.id','length','no',
            'weight','gutted','liver', 'gonad'))
 
 mfdb_import_survey(mdb,
@@ -263,8 +345,9 @@ rm(aldist)
 ## stomach data
 predators <-
     ffiskar %>%
-    setnames(old=c('flokk.id','ranfiskur','lengd'),
-             new=c('stomach_name','tegund','length')) %>%
+        rename(stomach_name=flokk.id, tegund=ranfiskur, length=lengd) %>%
+#    setnames(old=c('flokk.id','ranfiskur','lengd'),
+#             new=c('stomach_name','tegund','length')) %>%
     data.table %>%
     group_by(synis.id) %>%
     filter(synis.id %in% stations$synis.id) %>%
@@ -275,8 +358,10 @@ preys <-
     fhopar %>%
     filter(faeduhopur %in% p.names$faeduhopur) %>%
     left_join(p.names) %>%
-    setnames(old=c('flokk.id','fjoldi','thyngd','meltingarstig','name'),
-             new=c('stomach_name','count','weight','digestion_stage','species')) %>%
+        rename(stomach_name = flokk.id, count=fjoldi,weight=thyngd,
+               digestion_stage=meltingarstig,species=name)%>%
+#        setnames(old=c('flokk.id','fjoldi','thyngd','meltingarstig','name'),
+#             new=c('stomach_name','count','weight','digestion_stage','species')) %>%
     mutate(digestion_stage = digestion_stage+1) %>%
     filter(stomach_name %in% predators$stomach_name)
 
@@ -360,10 +445,10 @@ aldist <- data.table(all.kv) %>%
            
     
 setnames(aldist,
-         c('synis.id','ar','lengd', 'nr',
+         c('synis.id','lengd', 'nr',
            'oslaegt', 'slaegt', 'lifur','kynfaeri'),
-         c('sample.id','year','length','no',
-           'ungutted','gutted','liver', 'gonad'))
+         c('sample.id','length','no',
+           'weight','gutted','liver', 'gonad'))
 
 
 
@@ -574,10 +659,22 @@ mfdb_import_survey(mdb,
                    catage)
 
 
-
+capelinByMonth <-
+    landingsByYear %>%
+    filter(species=='capelin') %>%
+    select(-c(Total,Winter,Summer)) %>%
+    gather(country,catch,c(sIceland:sEU,wIceland:wGreenland),na.rm=TRUE) %>%
+    select(Year,species,country,catch) %>%
+    separate(country,c('season','country'),1) %>%
+    left_join(spitToDST2) %>%
+    filter(!is.na(shortname) & !is.na(Year) & shortname %in% species.key$species) %>%
+    mutate(group = ifelse(country=='Iceland','Iceland','Other')) %>%
+    group_by(Year,season,group) %>%
+    summarise(catch=sum(catch)*1e6)
 
 landingsByMonth <-
     landingsByYear %>%
+    filter(species!='capelin') %>% 
     left_join(spitToDST2) %>%
     filter(!is.na(shortname) & !is.na(Year) & shortname %in% species.key$species) %>%
     select(shortname,Year,Others,Total) %>%
@@ -916,12 +1013,4 @@ dse.catch <-
 mfdb_import_survey(mdb,
                    data_source = 'logbooks.dse',
                    dse.catch)
-
-
-
-
-## stomach data
-
-
-
 
