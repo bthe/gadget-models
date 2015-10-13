@@ -8,9 +8,18 @@ init.sigma <- mla[[1]] %>% group_by(age) %>%
 
 ## doesn't work currently, need to upload data
 lw <- mfdb_sample_meanweight(mdb,c('length'),
-                             c(list(sampling_type='IGFS',
+                             c(list(sampling_type='IGFS', species = 'LIN',
                                     length=mfdb_interval("", seq(0, 180, by = 1)))))
+
+lw.tmp <- 
+  lw[[1]] %>%
+   mutate(length=as.numeric(as.character(length)), 
+          weight=mean/1e3) %>% 
+  filter(length<120) %>% 
+  nls(weight ~ a*length^b,.,start=list(a=1e-5,b=3)) %>%
+  coefficients()
 if(FALSE){
+  library(fjolst)
     tmp <- stodvar %>% filter(synaflokkur == 30)
     had <- all.kv %>% filter(synis.id %in% tmp$synis.id, tegund == 6)
     lw <- had %>% group_by(ar,aldur) %>%
@@ -25,8 +34,8 @@ if(FALSE){
 opt <- gadget.options(type='simple2stock')
 
 ## adapt to Ling
-weight.alpha <-  0.00000495
-weight.beta <- 3.01793
+weight.alpha <-  lw.tmp[1] #0.00000495
+weight.beta <- lw.tmp[2] #3.01793
 
 opt$area$numofareas <- 1
 opt$time$firstyear <- 1960

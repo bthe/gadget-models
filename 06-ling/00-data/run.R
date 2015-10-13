@@ -1,11 +1,11 @@
 library(Rgadget)
 tmp <- gadget.iterative(rew.sI=TRUE,
                         main='main',
-                        grouping=list(sind=c('si2049','si5069','si70180'),
-                          survey=c('ldist.igfs','alkeys.igfs'),
-                          longline=c('ldist.lln','alkeys.lln'),
+                        grouping=list(sind=c('si.20-50','si.50-70','si.70-180'),
+                          survey=c('ldist.igfs','aldist.igfs'),
+                          longline=c('ldist.lln','aldist.lln'),
                           comm=c('ldist.gil','ldist.bmt',
-                            'alkeys.gil','alkeys.bmt'))
+                            'aldist.gil','aldist.bmt')),
                         wgts='WGTS')
 
 
