@@ -42,7 +42,7 @@ old.landings <-
 lln.fleet <-
     Rgadget:::make.gadget.fleet(name='lln',suitability='exponentiall50',
                                 fleet.data=lln.landings[[1]],
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,lln.fleet)
 
@@ -50,14 +50,14 @@ lln.fleet <-
 bmt.fleet <-
     Rgadget:::make.gadget.fleet(name='bmt',suitability='exponentiall50',
                                 fleet.data=bmt.landings[[1]],
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,bmt.fleet)
 
 gil.fleet <-
     Rgadget:::make.gadget.fleet(name='gil',suitability='exponentiall50',
                                 fleet.data=gil.landings[[1]],
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,gil.fleet)
 
@@ -68,15 +68,15 @@ igfs.landings <- data.frame(year=defaults$year,step=1,number=1,area=1)
 igfs.fleet <-
     Rgadget:::make.gadget.fleet(name='igfs',suitability='exponentiall50',
                                 fleet.data=igfs.landings,
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,igfs.fleet)
 
-aut.landings <- data.frame(year=defaults$year,step=4,number=1,area=1)
-aut.fleet <-
-    Rgadget:::make.gadget.fleet(name='aut',suitability='exponentiall50',
-                                fleet.data=aut.landings,
-                                stocknames=c('hadimm','hadmat'))
+#aut.landings <- data.frame(year=defaults$year,step=4,number=1,area=1)
+#aut.fleet <-
+#    Rgadget:::make.gadget.fleet(name='aut',suitability='exponentiall50',
+#                                fleet.data=aut.landings,
+#                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,aut.fleet)
 
@@ -84,7 +84,7 @@ aut.fleet <-
 old.fleet <-
     Rgadget:::make.gadget.fleet(name='oldfleet',suitability='exponentiall50',
                                 fleet.data=old.landings[[1]],
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 #Rgadget:::gadget_dir_write(gd,old.fleet)
 
@@ -93,7 +93,7 @@ old.fleet <-
 foreign.fleet <- 
     Rgadget:::make.gadget.fleet(name='foreign',suitability='exponentiall50',
                                 fleet.data=foreign.landings[[1]],
-                                stocknames=c('hadimm','hadmat'))
+                                stocknames=c('pokimm','pokmat'))
 
 ## foreign fishing vessels are longliners
 foreign.fleet@suitability <-  old.fleet@suitability

@@ -5,7 +5,7 @@ maxage <- Rgadget:::getMaxage(gm)
 ## Query length data to create IGFS catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = 'IGFS',
-    species = 'HAD',
+    species = 'POK',
     length = mfdb_interval("len", seq(0, 150, by = 2))),
                                                         defaults))
 
@@ -17,14 +17,14 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("igfs"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 ## Age IGFS
 aggdata <-
     mfdb_sample_count(mdb, c('age', 'length'),
                       c(list(sampling_type = 'IGFS',
                              age = mfdb_step_interval('age',by=1,from=1,to=12),
-                             species='HAD',
+                             species='POK',
                              length = mfdb_interval("len", seq(0, 150, by = 4))),
                         defaults))
 
@@ -37,7 +37,7 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("igfs"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 
 ## Maturity @3 from IGFS
@@ -46,7 +46,7 @@ aggdata <- mfdb_sample_count(mdb, c('maturity_stage','age','length'),
                                     list(sampling_type='IGFS',
                                          age=mfdb_group(age3=3:12),
                                          length = mfdb_step_interval('len', by = 2, to = 150),              
-                                         maturity_stage = mfdb_group(hadimm = 1, hadmat = 2:5))))
+                                         maturity_stage = mfdb_group(pokimm = 1, pokmat = 2:5))))
 
 gadget_dir_write(gd,
                  gadget_likelihood_component("stockdistribution",
@@ -54,14 +54,14 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("igfs"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 
 
 
 ## Query length data to create AUT catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = 'AUT',
-    species = 'HAD',
+    species = 'POK',
     length = mfdb_interval("len", seq(0, 150, by = 2))),
                                                         defaults))
 attributes(aggdata[['0.0.0.0.0']])$age$all <- minage:maxage
@@ -71,7 +71,7 @@ gadget_dir_write(gd, gadget_likelihood_component("catchdistribution",
                                                  weight = 1,
                                                  data = aggdata[[1]],,
                                                  fleetnames = c("aut"),
-                                                 stocknames = c("hadimm", "hadmat")))
+                                                 stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 ## Age AUT
 aggdata <-
@@ -91,14 +91,14 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("aut"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 
 
 ## Query length data to create lln catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = 'SEA',
-    species = 'HAD',
+    species = 'POK',
     gear = c('LLN','HLN'),
     length = mfdb_interval("len", seq(0, 150, by = 2))),
                                                         defaults))
@@ -109,7 +109,7 @@ gadget_dir_write(gd, gadget_likelihood_component("catchdistribution",
                                                  weight = 1,
                                                  data = aggdata[[1]],
                                                  fleetnames = c("lln"),
-                                                 stocknames = c("hadimm", "hadmat")))
+                                                 stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 ## Age lln
 aggdata <-
@@ -128,7 +128,7 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("lln"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 
 
@@ -136,7 +136,7 @@ rm(aggdata)
 ## Query length data to create bmt catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = 'SEA',
-    species = 'HAD',
+    species = 'POK',
     gear = c('BMT', 'NPT'),
     length = mfdb_interval("len", seq(0, 150, by = 2))),
                                                         defaults))
@@ -147,7 +147,7 @@ gadget_dir_write(gd, gadget_likelihood_component("catchdistribution",
                                                  weight = 1,
                                                  data = aggdata[[1]],
                                                  fleetnames = c("bmt"),
-                                                 stocknames = c("hadimm", "hadmat")))
+                                                 stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 ## Age bmt
 aggdata <-
@@ -166,13 +166,13 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("bmt"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 
 ## Query length data to create gil catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = 'SEA',
-    species = 'HAD',
+    species = 'POK',
     gear = c('GIL'),
     length = mfdb_interval("len", seq(0, 150, by = 2))),
                                                         defaults))
@@ -183,7 +183,7 @@ gadget_dir_write(gd, gadget_likelihood_component("catchdistribution",
                                                  weight = 1,
                                                  data = aggdata[[1]],
                                                  fleetnames = c("gil"),
-                                                 stocknames = c("hadimm", "hadmat")))
+                                                 stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 ## Age gil
 aggdata <-
@@ -202,6 +202,6 @@ gadget_dir_write(gd,
                                              weight = 1,
                                              data = aggdata[[1]],
                                              fleetnames = c("gil"),
-                                             stocknames = c("hadimm", "hadmat")))
+                                             stocknames = c("pokimm", "pokmat")))
 rm(aggdata)
 

@@ -1,6 +1,6 @@
 library(mfdb)
 ## Create a gadget directory, define some defaults to use with our queries below
-gd <- gadget_directory("../02-mfdbhad")
+gd <- gadget_directory("../02-mfdbpok")
 
 mdb<-mfdb('Iceland')
 
@@ -14,7 +14,7 @@ defaults <- list(
     area = mfdb_group("1" = unique(reitmapping$SUBDIVISION)),
     timestep = mfdb_timestep_quarterly,
     year = 1982:2015,
-    species = 'HAD')
+    species = 'POK')
 ## Write out areafile and update mainfile with areafile location
 gadget_dir_write(gd, gadget_areafile(
     size = mfdb_area_size(mdb, defaults)[[1]],
@@ -42,7 +42,7 @@ source('setup-fleets.R')
 source('setup-model.R')
 source('setup-catchdistribution.R')
 source('setup-indices.R')
-source('setup-catchstatistics.R')
+#source('setup-catchstatistics.R')
 
 file.copy('itterfitter.sh',gd$dir)
 file.copy('run.R',gd$dir)
