@@ -730,6 +730,7 @@ cap.dat <- ldply(tmp,function(x) x)
 acoustic <-
     data.table(cap.dat) %>%
     select(.id,lon,lat,sa,date) %>%
+    filter(sa >= 0) %>%
     mutate(species = 'CAP',
            areacell = d2sr(lat,lon),
            date = as.Date(date,'%d.%m.%y'),
