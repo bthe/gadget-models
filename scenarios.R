@@ -1,4 +1,4 @@
-library(RGadget)
+library(Rgadget)
 library(doMC)
 registerDoMC(cores = detectCores(logical = TRUE))
 
