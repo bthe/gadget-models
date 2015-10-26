@@ -12,7 +12,7 @@ igfs.SI2 <- mfdb_sample_count(mdb, c('length'), c(list(
 
 igfs.SI3 <- mfdb_sample_count(mdb, c( 'length'), c(list(
     sampling_type = 'IGFS',
-    length = mfdb_interval("len", c(70,80,90,110))),
+    length = mfdb_interval("len", c(70,80,110))),
     defaults))
 
 
