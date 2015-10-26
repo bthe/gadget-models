@@ -17,10 +17,16 @@
                             ifelse(fleet=='lln',lln*ratio,
                                    gil*ratio)))
     
+    if(grepl('ling',fit$res.by.year$stock[1])){
+      rec.window <- c(1980,2000)
+    } else {
+      rec.window <- c(1980,2010)
+    }
+    
     progn <- gadget.forward(params.file='WGTS/params.final',
                             effort=seq(0.8,1.5,by = 0.05),
                             fleets=pre.fleet,mat.par=c(0,0),
-                            rec.window = c(1980,2010),
+                            rec.window = rec.window,
                             years = 100,
                             num.trials = 100,
                             gd = list(dir = ".", 
@@ -34,20 +40,24 @@
                 progn.ssb) %>%
       filter(year > 2050) %>%
       ungroup() %>%
-      group_by(effort) %>%
+      group_by(stock,effort,trial) %>%
+      summarise(catch=mean(catch),
+                total.bio = mean(total.bio)) %>%
+      ungroup() %>% 
+      group_by(stock,effort) %>%
       summarise(catch.m=mean(catch),
                 catch.u=quantile(catch,0.975),
                 catch.l=quantile(catch,0.025),
                 ssb.m=mean(total.bio),
                 ssb.u=quantile(total.bio,0.975),
                 ssb.l=quantile(total.bio,0.025)) %>%
-      mutate(bmt=bmt,lln=lln,gil=1)
+      mutate(bmt=bmt,lln=lln,gil=gil)
     setwd(curr.dir)
-      return(res)  
+    return(res)  
   }
   
   dirs <- c('01-cod/02-mfdbcod','02-haddock/02-mfdbhad','03-saithe/02-mfdbpok',
-            '06-ling/02-mfdbling','08-tusk/02-mfdbtusk')
+            '06-ling/02-mfdbling','08-tusk/02-mfdbtusk','09-wolf/02-mfdbwolf')
   
   lln.inc <- c(1,1.1,1.2,1.3)
   
@@ -65,3 +75,4 @@ res <- ddply(run.dat,~run.id,
              .parallel = TRUE)
 
 save(res,file='res.RData')
+
