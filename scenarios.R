@@ -53,6 +53,8 @@ run.dat <- data.frame(run.id = 1:length(dirs)*length(lln.inc),
                       gil = 1)
 
 res <- ddply(run.dat,~run.id,
-             runner, .parallel = TRUE)
+             function(x) runner(bmt=x$bmt,lln = x$lln,
+                                gil=x$gil, folder=x$dirs),
+             .parallel = TRUE)
 
 save(res,file='res.RData')
