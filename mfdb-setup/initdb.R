@@ -11,7 +11,7 @@ library(dplyrOracle)
 library(reshape2)
 library(tidyr)
 
-## oracle connection
+## oracle connection from https://github.com/tomasgreif/dplyrOracle
 mar <- dplyrOracle::src_oracle("mar")
 
 ## Create connection to MFDB database, as the Icelandic case study
@@ -355,11 +355,11 @@ predators <-
     left_join(species.key)
 
 preys <-
-    fhopar %>%
-    filter(faeduhopur %in% p.names$faeduhopur) %>%
-    left_join(p.names) %>%
-        rename(stomach_name = flokk.id, count=fjoldi,weight=thyngd,
-               digestion_stage=meltingarstig,species=name)%>%
+  fhopar %>%
+  filter(faeduhopur %in% p.names$faeduhopur) %>%
+  left_join(p.names) %>%
+  rename(stomach_name = flokk.id, count=fjoldi,weight=thyngd,
+         digestion_stage=meltingarstig,species=name)%>%
 #        setnames(old=c('flokk.id','fjoldi','thyngd','meltingarstig','name'),
 #             new=c('stomach_name','count','weight','digestion_stage','species')) %>%
     mutate(digestion_stage = digestion_stage+1) %>%
@@ -457,25 +457,30 @@ mfdb_import_survey(mdb,
                    aldist)
 rm(aldist)
 
+
 ## stomach data
 predators <-
-    ffiskar %>%
-    setnames(old=c('flokk.id','ranfiskur','lengd'),
-             new=c('stomach_name','tegund','length')) %>%
-    data.table %>%
-    group_by(synis.id) %>%
-    filter(synis.id %in% stations$synis.id) %>%
-    left_join(stations) %>%
-    left_join(species.key)
+  ffiskar %>%
+  rename(stomach_name=flokk.id, tegund=ranfiskur, length=lengd) %>%
+  #    setnames(old=c('flokk.id','ranfiskur','lengd'),
+  #             new=c('stomach_name','tegund','length')) %>%
+  data.table %>%
+  group_by(synis.id) %>%
+  filter(synis.id %in% stations$synis.id) %>%
+  left_join(stations,copy=TRUE) %>%
+  left_join(species.key,copy=TRUE)
 
 preys <-
-    fhopar %>%
-    filter(faeduhopur %in% p.names$faeduhopur) %>%
-    left_join(p.names) %>%
-    setnames(old=c('flokk.id','fjoldi','thyngd','meltingarstig','name'),
-             new=c('stomach_name','count','weight','digestion_stage','species')) %>%
-    mutate(digestion_stage = digestion_stage+1) %>%
-    filter(stomach_name %in% predators$stomach_name)
+  fhopar %>%
+  filter(faeduhopur %in% p.names$faeduhopur) %>%
+  left_join(p.names) %>%
+  rename(stomach_name = flokk.id, count=fjoldi,weight=thyngd,
+         digestion_stage=meltingarstig,species=name)%>%
+  #        setnames(old=c('flokk.id','fjoldi','thyngd','meltingarstig','name'),
+  #             new=c('stomach_name','count','weight','digestion_stage','species')) %>%
+  mutate(digestion_stage = digestion_stage+1) %>%
+  filter(stomach_name %in% predators$stomach_name)
+
 
 mfdb_import_stomach(mdb,
                     data_source = 'stomachdata.aut',

@@ -24,11 +24,11 @@
     }
     
     progn <- gadget.forward(params.file='WGTS/params.final',
-                            effort=seq(0.8,1.5,by = 0.05),
+                            effort=seq(0.5,1.5,by = 0.05),
                             fleets=pre.fleet,mat.par=c(0,0),
                             rec.window = rec.window,
                             years = 100,
-                            num.trials = 100,
+                            num.trials = 10,
                             gd = list(dir = ".", 
                                       rel.dir = sprintf("PRE-%s",id)))
     
@@ -75,4 +75,6 @@ res <- ddply(run.dat,~run.id,
              .parallel = TRUE)
 
 save(res,file='res.RData')
+
+
 
