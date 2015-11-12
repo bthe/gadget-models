@@ -58,6 +58,9 @@ plot(fit,data='res.by.year',type='catch')
 ## fishing mortality
 plot(fit,data='res.by.year',type='F') 
 
+## fishing mortality
+plot(fit,data='res.by.year',type='rec') 
+
 ## Harvest rate
 fit$fleet.info %>%
   filter(fleet %in% c('bmt','gil','lln'), year >1990) %>%
