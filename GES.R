@@ -28,6 +28,24 @@ Fmsy <-
 
 class(fit) <- c("gadget.fit", "list")
 
+## fit to biomass indices
+fit$stock.full %>% filter(year==1960) %>% 
+  mutate(species = gsub('imm|mat','',.id)) %>%
+  select(species,lower=length,weight=mean.weight) %>%
+  distinct() %>%
+  right_join(fit$sidat %>%
+               mutate(species = gsub('imm|mat','',
+                                     gsub('\t([a-z]*)','',stocknames)),
+                      lower = ifelse(lower==min(lower,na.rm=TRUE),lower+6,lower),
+                      lower = ifelse(lower %% 2 == 1,lower+1,lower))) %>%
+  filter(step==1) %>%
+  group_by(year,species) %>%
+  summarise(obs=sum(number.x*weight,na.rm=TRUE),
+            prd=sum(predict*weight,na.rm=TRUE)) %>%
+  ggplot(aes(year,obs)) + geom_point() + geom_line(aes(year,prd)) + 
+  facet_wrap(~species,scale='free_y') + theme_bw() + 
+  xlab('Year') + ylab('Spring survey index')
+
 ## trends in biomass
 plot(fit,data='res.by.year',type='total')
 
