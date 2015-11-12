@@ -15,7 +15,7 @@ library(tidyr)
 mar <- dplyrOracle::src_oracle("mar")
 
 ## Create connection to MFDB database, as the Icelandic case study
-mdb <- mfdb('Iceland')#,db_params=list(host='hafgeimur.hafro.is'))
+mdb <- mfdb('Iceland',db_params=list(host='hafgeimur.hafro.is'))
 #species.key <-
 #    mfdb:::mfdb_fetch(mdb,"select * from species where name in",
 #                      "('COD','HAD','POK','WHG','WHB','USK','REB',",
