@@ -34,12 +34,14 @@ if(FALSE){
 opt <- gadget.options(type='simple2stock')
 
 ## adapt to Ling
-weight.alpha <-  lw.tmp[1] #0.00000495
-weight.beta <- lw.tmp[2] #3.01793
+weight.alpha <-  as.numeric(lw.tmp[1]) #0.00000495
+weight.beta <- as.numeric(lw.tmp[2]) #3.01793
 
 opt$area$numofareas <- 1
-opt$time$firstyear <- 1960
-opt$time$lastyear <- 2015
+opt$time$firstyear <- min(year_range)
+opt$time$lastyear <- max(year_range)
+
+
 
 ## immature stock
 opt$stocks$imm <-
@@ -55,7 +57,7 @@ opt$stocks$imm <-
     weight <- c(a=weight.alpha, b=weight.beta)
     init.abund <- sprintf('(* %s %s)',c(0,0.1,0.1,0.08,0.06,0.04,0.02,0.01,0,0),
                           c(0,sprintf('#ling.age%s',2:7),0,0,0))
-    n <- sprintf('(* 1000 #ling.rec%s)',1960:2015)
+    n <- sprintf('(* 1000 #ling.rec%s)',year_range)
     doesmature <- 1
     maturityfunction <- 'continuous'
     maturestocksandratios <- 'lingmat 1'
@@ -90,7 +92,7 @@ opt$stocks$mat <-
     M <- rep(0.15, 18) #c(0.2,  0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.5, 0.7)
     growth <- c(linf='#ling.Linf',k='( * 0.001 #ling.k)',
                 beta='(* 10 #ling.bbin)', binn=15,recl='#ling.recl')
-    weight <- c(a=3.5e-6, b=3.22)
+    weight <- c(a=weight.alpha, b=weight.beta)
     init.abund <- sprintf('(* %s %s)',
                           c(0,0.02,0.04,0.06,0.08,0.09,0.01,0.001,0.0001,
                             0,0,0,0,0,0,0,0,0),
@@ -108,7 +110,7 @@ gm <- gadget.skeleton(time=opt$time, area=opt$area,
 gm@stocks$imm@initialdata$area.factor <- '( * 100 #ling.mult)'
 gm@stocks$mat@initialdata$area.factor <- '( * 100 #ling.mult)'
 
-gm@fleets <- list(old.fleet,igfs.fleet,#aut.fleet,
+gm@fleets <- list(igfs.fleet,#aut.fleet,
                   lln.fleet,gil.fleet,bmt.fleet,foreign.fleet)
 gd.list <- list(dir=gd$dir)
 Rgadget:::gadget_dir_write(gd.list,gm)

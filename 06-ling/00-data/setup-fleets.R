@@ -27,15 +27,15 @@ foreign.landings <-
                         defaults))
 
 
-tmp <- defaults
-tmp$year <- 1960:1982
+#tmp <- defaults
+#tmp$year <- 1960:1982
 
-old.landings <-
-    mfdb_sample_count(mdb, c('age', 'length'),
-                      c(list(
-                          sampling_type = 'OLND',
-                          species = defaults$species),
-                        tmp))
+#old.landings <-
+#    mfdb_sample_count(mdb, c('age', 'length'),
+#                      c(list(
+#                          sampling_type = 'OLND',
+#                          species = defaults$species),
+#                        tmp))
 
 
 ## make fleets
@@ -81,10 +81,10 @@ igfs.fleet <-
 #Rgadget:::gadget_dir_write(gd,aut.fleet)
 
 ## old fleet
-old.fleet <-
-    Rgadget:::make.gadget.fleet(name='oldfleet',suitability='exponentiall50',
-                                fleet.data=old.landings[[1]],
-                                stocknames=c('lingimm','lingmat'))
+#old.fleet <-
+#    Rgadget:::make.gadget.fleet(name='oldfleet',suitability='exponentiall50',
+#                                fleet.data=old.landings[[1]],
+#                                stocknames=c('lingimm','lingmat'))
 
 #Rgadget:::gadget_dir_write(gd,old.fleet)
 
@@ -97,5 +97,5 @@ foreign.fleet <-
 
 ## foreign fishing vessels are longliners
 foreign.fleet@suitability <-  lln.fleet@suitability
-old.fleet@suitability <-  lln.fleet@suitability
+#old.fleet@suitability <-  lln.fleet@suitability
 #Rgadget:::gadget_dir_write(gd,foreign.fleet)

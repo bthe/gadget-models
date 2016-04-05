@@ -1,8 +1,10 @@
 library(mfdb)
 ## Create a gadget directory, define some defaults to use with our queries below
-gd <- gadget_directory("../02-mfdbling")
+gd <- gadget_directory("../03-ling-wgdeep")
 
 mdb<-mfdb('Iceland')
+
+year_range <- 1982:2015
 
 reitmapping <- read.table(
         system.file("demo-data", "reitmapping.tsv", package="mfdb"),
@@ -42,7 +44,7 @@ source('setup-fleets.R')
 source('setup-model.R')
 source('setup-catchdistribution.R')
 source('setup-indices.R')
-source('setup-catchstatistics.R')
+#source('setup-catchstatistics.R')
 
 file.copy('itterfitter.sh',gd$dir)
 file.copy('run.R',gd$dir)

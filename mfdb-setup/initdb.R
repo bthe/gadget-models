@@ -504,32 +504,32 @@ port2division <- function(hofn){
     hafnir.numer[hofn>=122 & hofn<=148] <- 106
     hafnir.numer[hofn==149] <- 109
     hafnir.numer[hofn>=150] <- 111
-    data.table(hofn=hofn,division=hafnir.numer) %>%
-        group_by(hofn,division) 
+    data.frame(hofn=hofn,division=hafnir.numer) 
 }
 
+
 gridcell.mapping <-
-    ddply(reitmapping,~DIVISION,function(x) head(x,1))
-names(gridcell.mapping) <- c('areacell','division','subdivision')
+  plyr::ddply(reitmapping,~DIVISION,function(x) head(x,1)) %>% 
+  rename(areacell=GRIDCELL,division=DIVISION,subdivision=SUBDIVISION)
 
-species.key <- species.key %>%
-    mutate(fteg=tegund)
+species.key <- tbl(mar,'species_key') %>% 
+  collect()
 
-mapping <- mapping %>%
-     mutate(veidarf=veidarfaeri)
+mapping <- tbl(mar,'gear_mapping') %>%
+  collect()
 
 port.mapping <-
     port2division(0:999) %>%
-    left_join(data.table(gridcell.mapping))
+    left_join(gridcell.mapping)
 
 landings <-
-    data.table(landedcatch) %>%
-    group_by(veidisvaedi, gerd,ar, hofn, man, dags, veidarf, fteg) %>%
+    landedcatch %>%
     left_join(port.mapping) %>%
-    left_join(species.key) %>%
-    left_join(mapping,copy=TRUE) %>%
+    left_join(species.key,by=c('fteg'='tegund')) %>%
+    left_join(mapping,by = c('veidarf'='veidarfaeri')) %>%
     filter(!is.na(species) & !(veidarf %in% c(0,37,45,139)) &
-           (is.na(veidisvaedi) | veidisvaedi == 'I'))%>%
+           (is.na(veidisvaedi) | veidisvaedi == 'I') & 
+             (flokkur != -4|is.na(flokkur))) %>%
     mutate(#index_type='landings',
            sampling_type='LND',
            count = magn,
