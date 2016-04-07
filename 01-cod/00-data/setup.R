@@ -1,4 +1,5 @@
 library(mfdb)
+library(Rgadget)
 ## Create a gadget directory, define some defaults to use with our queries below
 gd <- gadget_directory("../02-mfdbcod")
 

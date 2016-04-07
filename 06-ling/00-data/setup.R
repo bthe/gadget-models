@@ -4,9 +4,10 @@ gd <- gadget_directory("../03-ling-wgdeep")
 
 mdb<-mfdb('Iceland')
 
-year_range <- 1982:2015
+year_range <- 1982:2016
 
-reitmapping <- read.table(
+reitmapping <- 
+  read.table(
         system.file("demo-data", "reitmapping.tsv", package="mfdb"),
         header=TRUE,
         as.is=TRUE)
@@ -15,7 +16,7 @@ reitmapping <- read.table(
 defaults <- list(
     area = mfdb_group("1" = unique(reitmapping$SUBDIVISION)),
     timestep = mfdb_timestep_quarterly,
-    year = 1982:2015,
+    year = year_range,
     species = 'LIN')
 ## Write out areafile and update mainfile with areafile location
 gadget_dir_write(gd, gadget_areafile(

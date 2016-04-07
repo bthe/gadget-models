@@ -3,8 +3,10 @@ library(Rgadget)
 mla <- mfdb_sample_meanlength_stddev(mdb,c('age'),
                                      c(list(sampling_type='IGFS',age=1:20),
                                        defaults))
-init.sigma <- mla[[1]] %>% group_by(age) %>%
-    summarise(ml=mean(mean), ms = mean(stddev,na.rm=TRUE))
+init.sigma <- 
+  mla[[1]] %>% 
+  dplyr::group_by(age) %>%
+  dplyr::summarise(ml=mean(mean), ms = mean(stddev,na.rm=TRUE))
 
 ## doesn't work currently, need to upload data
 lw <- mfdb_sample_meanweight(mdb,c('length'),
@@ -13,9 +15,9 @@ lw <- mfdb_sample_meanweight(mdb,c('length'),
 
 lw.tmp <- 
   lw[[1]] %>%
-   mutate(length=as.numeric(as.character(length)), 
-          weight=mean/1e3) %>% 
-  filter(length<120) %>% 
+  dplyr::mutate(length=as.numeric(as.character(length)), 
+                weight=mean/1e3) %>% 
+  dplyr::filter(length<120) %>% 
   nls(weight ~ a*length^b,.,start=list(a=1e-5,b=3)) %>%
   coefficients()
 if(FALSE){
@@ -139,7 +141,7 @@ ling.age8	          5	   1e-10     100        1
 ling.age9	         25	   1e-12     100        1
 ling.age10	         10	   1e-15     100        1
 ling.mat1	          70	      10      200        1
-ling.mat2	          70	      30      100        1',header=TRUE) 
+ling.mat2	          100	      60      150        1',header=TRUE) 
 
 init.params$switch <- rownames(init.params)
 

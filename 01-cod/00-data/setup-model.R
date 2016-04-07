@@ -5,6 +5,36 @@ mla <- mfdb_sample_meanlength_stddev(mdb,c('age'),
 init.sigma <- mla[[1]] %>% group_by(age) %>%
     summarise(ml=mean(mean), ms = mean(stddev,na.rm=TRUE))
 ## populate the model with sane defaults
+gadgetstock('codimm',gd$dir,missingOkay = TRUE) %>%
+  gadget_update('stock',
+                minage = 1,
+                maxage = 10,
+                minlength = 4,
+                maxlength = 130,
+                dl = 2) %>%
+  ## does"something" updates should also allow for other names, e.g. doesrenew -> recruitment etc..
+  gadget_update('doesgrow',  
+                ## 1) some error catching would be useful here to ensure that the inputs are valid
+                ## i.e. make sure that the variables declared are valid
+                ## 2) the following could be set as default values for this component, although 
+                ## one might want to add the the name of the stock to the variable (like 'codimm.Linf') 
+                growthfunction = 'lengthvbsimple',
+                growthparameters = c(linf='#Linf',k='( * 0.001 #k)', '#walpha','#wbeta'),
+                beta='(* 10 #bbin)', 
+                maxlengthgroupgrowth=15) %>%
+  gadget_update('stock',   
+                ## here it would be useful to be able to call parameters defined above akin to dplyr::mutate  
+                ## default value should be 0.2 repeated for all ages
+                naturalmortality = c(0.5,  0.35, 0.2, 0.2,  0.2, 0.2, 0.2, 0.2, 0.2, 0.3)) %>%
+  gadget_update('refweight',
+                ## would be useful to have an option to have just alpha and beta from the relationship 
+                ## W=alpha*L^beta 
+                ## also just supply a normal data.frame
+                data=data_frame(length=seq(4,130,2),mean=6.5e-6*length^3.07)
+                ) %>%
+  
+  
+
 opt <- gadget.options(type='simple2stock')
 
 ## adapt to Cod

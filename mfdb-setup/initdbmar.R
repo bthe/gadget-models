@@ -13,7 +13,7 @@ library(stringr)
 mar <- dplyrOracle::src_oracle("mar")
 
 ## Create connection to MFDB database, as the Icelandic case study
-mdb <- mfdb('Iceland',db_params=list(host='hafgeimur.hafro.is'))
+mdb <- mfdb('Iceland')
 
 ## Import area definitions
 reitmapping <- read.table(
@@ -115,15 +115,15 @@ ldist <-
   lesa_lengdir(mar) %>% 
   inner_join(tbl(mar,'species_key')) %>% 
   right_join(stations) %>% 
-  inner_join(lesa_numer(mar) %>% 
-              filter(fj_maelt > 0) %>% 
-              mutate(r = 1 + fj_talid/fj_maelt) %>% 
-              select(synis_id, r),
-            by = "synis_id") %>% 
+  left_join(lesa_numer(mar) %>% #ifelse(fj_maelt>0,1,fj_maelt)
+              filter(fj_maelt>0) %>% 
+              mutate(r = 1 + fj_talid/fj_maelt) %>%
+              select(synis_id,tegund, r),
+            by = c("synis_id","tegund")) %>% 
   mutate(lengd = ifelse(is.na(lengd), 0, lengd),
          fjoldi = ifelse(is.na(fjoldi), 0, fjoldi),
          r = ifelse(is.na(r), 1 , r),
-         count = r * fjoldi,
+         count = round(r * fjoldi,0),
          kyn = ifelse(kyn == 2,'F',ifelse(kyn ==1,'M','')),
          kynthroski = ifelse(kynthroski > 1,2,ifelse(kynthroski == 1,1,NA)),
          age = 0)%>%
@@ -136,6 +136,7 @@ ldist <-
 mfdb_import_survey(mdb,
                    data_source = 'iceland-ldist',
                    ldist)
+rm(ldist)
 
 ## age -- length data
 aldist <-
@@ -158,7 +159,7 @@ aldist <-
 mfdb_import_survey(mdb,
                    data_source = 'iceland-aldist',
                    aldist)
-
+rm(aldist)
 ## landings 
 port2division <- function(hofn){
   hafnir.numer <- rep(0,length(hofn))
