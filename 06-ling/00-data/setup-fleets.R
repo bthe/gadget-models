@@ -7,7 +7,7 @@ lln.landings <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
 
 
 bmt.landings <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
-    gear=c('BMT','NPT','DSE','PSE','PGT'),
+    gear=c('BMT','NPT','DSE','PSE','PGT','SHT'),
     sampling_type = 'LND',
     species = defaults$species),
                                                         defaults))
