@@ -29,7 +29,7 @@ reitmapping <- read.table(
   select(-.out) %>% 
   na.omit()
 
-copy_to(mar,reitmapping,'reitmapping')
+copy_to(mar,reitmapping,'reitmapping',overwrite=TRUE)
         
 mfdb_import_area(mdb, 
                  reitmapping %>% 
@@ -99,7 +99,9 @@ stations <-
   mutate(sampling_type = ifelse(synaflokkur %in% c(1,2,8),'SEA',
                                 ifelse(synaflokkur %in% c(10,12),'CAP',
                                        ifelse(synaflokkur == 30,'IGFS',
-                                              ifelse(synaflokkur==35,'AUT','SMN'))))) %>% 
+                                              ifelse(synaflokkur==35,'AUT','SMN')))),
+         man = ifelse(synaflokkur == 30, 3,
+                      ifelse(synaflokkur == 35,10,man))) %>% 
   left_join( tbl(mar,'gear_mapping'),by='veidarfaeri') %>% 
   select(synis_id,ar,man,lat=kastad_n_breidd,lon=kastad_v_lengd,gear,sampling_type) %>% 
   mutate(areacell=d2sr(lat,lon),
