@@ -8,7 +8,7 @@ init.sigma <-
   dplyr::group_by(age) %>%
   dplyr::summarise(ml=mean(mean), ms = mean(stddev,na.rm=TRUE))
 
-## doesn't work currently, need to upload data
+
 lw <- mfdb_sample_meanweight(mdb,c('length'),
                              c(list(sampling_type='IGFS', species = 'LIN',
                                     length=mfdb_interval("", seq(0, 180, by = 1)))))
@@ -31,6 +31,20 @@ if(FALSE){
         summarise(sl = mean(sl,na.rm=TRUE))
     
 }
+
+## lets find proportion mature @age
+matatage <- mfdb_sample_count(mdb, c('maturity_stage','age'),
+                             append(list(species = 'LIN'),
+                                    list(sampling_type='IGFS',
+                                         age=mfdb_step_interval('',by=1,from=1,to=20),
+                                         maturity_stage = mfdb_group(lingimm = 1, lingmat = 2:5))))[[1]] %>%
+  dplyr::mutate(age=as.numeric(age)) %>% 
+  dplyr::group_by(age) %>% 
+  dplyr::mutate(prop = number/sum(number)) %>% 
+  select(stock=maturity_stage,age,prop)
+
+p.imm <- (filter(matatage,stock=='lingimm') %>% arrange(age))[['prop']][1:9] ## recruits are thrown away
+p.mat <- (filter(matatage,stock=='lingmat') %>% arrange(age))[['prop']] 
 
 ## populate the model with sane defaults
 opt <- gadget.options(type='simple2stock')
@@ -57,8 +71,8 @@ opt$stocks$imm <-
     growth <- c(linf='#ling.Linf',k='( * 0.001 #ling.k)',
                 beta='(* 10 #ling.bbin)', binn=15,recl='#ling.recl')
     weight <- c(a=weight.alpha, b=weight.beta)
-    init.abund <- sprintf('(* %s %s)',c(0,0.1,0.1,0.08,0.06,0.04,0.02,0.01,0,0),
-                          c(0,sprintf('#ling.age%s',2:7),0,0,0))
+    init.abund <- sprintf('(* 0.01 %s %s)',c(0,p.imm),
+                          c(0,sprintf('#ling.age%s',2:10)))
     n <- sprintf('(* 1000 #ling.rec%s)',year_range)
     doesmature <- 1
     maturityfunction <- 'continuous'
@@ -95,10 +109,9 @@ opt$stocks$mat <-
     growth <- c(linf='#ling.Linf',k='( * 0.001 #ling.k)',
                 beta='(* 10 #ling.bbin)', binn=15,recl='#ling.recl')
     weight <- c(a=weight.alpha, b=weight.beta)
-    init.abund <- sprintf('(* %s %s)',
-                          c(0,0.02,0.04,0.06,0.08,0.09,0.01,0.001,0.0001,
-                            0,0,0,0,0,0,0,0,0),
-                          c(0,sprintf('#ling.age%s',4:10),rep(0,10)))
+    init.abund <- sprintf('(* 0.01 %s %s)',
+                          c(p.mat,  exp(-0.5*1:3)*0.0001),
+                          c(0,sprintf('#ling.age%s',4:10),rep('#ling.age10',10)))
     sigma <- c(init.sigma$ms[1],head(init.sigma$ms,14),rep(init.sigma$ms[14],5))
     doesmature <- 0
     doesmigrate <- 0

@@ -21,7 +21,9 @@ reitmapping <- read.table(
   header=TRUE,
   as.is=TRUE) %>% 
   tbl_df() %>% 
-  mutate(id = 1:n()) %>% 
+  mutate(id = 1:n(),
+         lat = geo::sr2d(GRIDCELL)$lat,
+         lon = geo::sr2d(GRIDCELL)$lon) %>% 
   by_row(safely(function(x) geo::srA(x$GRIDCELL),otherwise=NA)) %>% 
   unnest(size=.out %>% map('result')) %>% 
   select(-.out) %>% 
@@ -76,17 +78,16 @@ copy_to(dest = mar,
 
 ## Set-up sampling types
 
-## Set-up some sampling types
-
 mfdb_import_sampling_type(mdb, data.frame(
-  id = 1:12,
+  id = 1:14,
   name = c('SEA', 'IGFS','AUT','SMN','LND','LOG','INS','ACU','FLND','OLND','CAA',
-           'CAP'),
+           'CAP','GRE','FAER'),
   description = c('Sea sampling', 'Icelandic ground fish survey',
                   'Icelandic autumn survey','Icelandic gillnet survey',
                   'Landings','Logbooks','Icelandic nephrop survey',
                   'Acoustic capelin survey','Foreign vessel landings','Old landings (pre 1981)',
-                  'Old catch at age','Capelin data')))
+                  'Old catch at age','Capelin data','Eastern Greenland autumn survey',
+                  'Faeroese summer survey')))
 
 ## stations table
 
@@ -265,16 +266,15 @@ landingsByMonth <-
   left_join(spitToDST2) %>%
   inner_join(tbl(mar,'species_key') %>% collect(), by = c('shortname'='species')) %>% 
   filter(!is.na(shortname) & !is.na(Year)) %>%
-  select(shortname,Year,Others,Total) %>%
-  group_by(shortname,Year) %>%
+  select(shortname,Year,Iceland,Total) %>%
   left_join((expand.grid(Year=1905:2015,month=1:12))) %>%
   mutate(year = Year,
          sampling_type = 'FLND', 
          species = shortname,
+         Others = Total - Iceland,
          count = 1000*Others/12,
          gear = 'LLN', ## this needs serious consideration
          areacell = 2741) %>% ## just to have something
-  ungroup %>%
   mutate(shortname = NULL,
          Others = NULL,
          Total = NULL) %>% 
