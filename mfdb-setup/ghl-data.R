@@ -95,6 +95,18 @@ mfdb_import_survey(mdb,
                    data_source = 'faeroes-aldist',
                    fo.aldist)
   
+vonB.par <-
+  list(nls(length~Linf*(1-exp(-K*(age-t0))),
+           data=filter(fo.aldist,sex=='M'), start=list(Linf=110, K=0.1, t0=-1)) %>% 
+         tidy() %>% 
+         mutate(sex='M'),
+       nls(length~Linf*(1-exp(-K*(age-t0))),
+           data=filter(fo.aldist,sex=='F'), start=list(Linf=110, K=0.1, t0=-1)) %>% 
+         tidy() %>% 
+         mutate(sex='F')
+       ) %>% 
+  bind_rows()
+
 
 ## greenland autum survey
 load('mfdb-setup/Data/ghlCombinedSurveyData.RData')

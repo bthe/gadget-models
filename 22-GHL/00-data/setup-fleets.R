@@ -1,6 +1,6 @@
 ## Collect catches by fleet:
 
-ghl.landings <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
+comm.landings <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     #gear=c('BMT','NPT','DSE','PSE','PGT','SHT'),
     sampling_type = 'LND',
     species = defaults$species),
@@ -15,9 +15,9 @@ foreign.landings <-
                         defaults))
 
 
-ghl.fleet <-
-    Rgadget:::make.gadget.fleet(name='ghl',suitability='exponentiall50',
-                                fleet.data=bmt.landings[[1]],
+comm.fleet <-
+    Rgadget:::make.gadget.fleet(name='comm',suitability='exponentiall50',
+                                fleet.data=comm.landings[[1]],
                                 stocknames=stock.names)
 
 
@@ -36,4 +36,4 @@ foreign.fleet <-
                                 stocknames=stock.names)
 
 ## foreign fishing vessels use the same type of gear
-foreign.fleet@suitability <-  ghl.fleet@suitability
+foreign.fleet@suitability <-  comm.fleet@suitability

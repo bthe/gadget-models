@@ -15,7 +15,7 @@ init.female <- filter(init.sigma,sex == 'F')
 lw <- mfdb_sample_meanweight(mdb,c('length','sex'),
                              c(list(sampling_type='AUT', species = defaults$species,
                                     sex = c('M','F'),
-                                    length=mfdb_interval("", seq(0, 100, by = 1)))))
+                                    length=mfdb_interval("", seq(0, 150, by = 1)))))
 
 lw.tmp <- 
   lw[[1]] %>%
@@ -57,7 +57,7 @@ opt$stocks$imm <-
                           c(0,sprintf('#ghlmale.age%s',c(2:18,rep(18,7)))))
     n <- sprintf('(* 1000 #ghl.rec%s)',year_range)
     doesmature <- 0
-    sigma <- c(rep(init.sigma$ms[2],5),tail(init.male$ms,9),rep(init.male$ms[10],5))
+    sigma <- c(rep(init.sigma$ms[2],5),tail(init.male$ms,9),rep(init.male$ms[10],15))
       #list(alpha='( * 0.001 #mat1)',
                             #      l50='#mat2', beta=0,
                             #      a50=0)
@@ -85,11 +85,11 @@ opt$stocks$fem <-
 gm <- gadget.skeleton(time=opt$time, area=opt$area,
                       stocks=opt$stocks,opt$fleets)
 
-gm@stocks$imm@initialdata$area.factor <- '( * 100 #ling.mult)'
-gm@stocks$mat@initialdata$area.factor <- '( * 100 #ling.mult)'
+gm@stocks$imm@initialdata$area.factor <- '( * 100 #ghlmale.mult)'
+gm@stocks$fem@initialdata$area.factor <- '( * 100 #ghlfemale.mult)'
 
 gm@fleets <- list(aut.fleet,
-                  ghl.fleet,foreign.fleet)
+                  comm.fleet,foreign.fleet)
 gd.list <- list(dir=gd$dir)
 Rgadget:::gadget_dir_write(gd.list,gm)
 
@@ -99,25 +99,52 @@ callGadget(s=1,ignore.stderr = FALSE)
 
 init.params <- read.gadget.parameters('params.out')
 
-init.params[c('ling.Linf','ling.k','ling.bbin','ling.mult',
-              grep('age',rownames(init.params),value=TRUE),
-              'ling.mat1','ling.mat2'),] <- 
+init.params[c('ghlmale.Linf','ghlmale.k','ghlmale.bbin','ghlmale.mult',
+              'ghlfemale.Linf','ghlfemale.k','ghlfemale.bbin','ghlfemale.mult',
+              grep('age',rownames(init.params),value=TRUE)),] <- 
   read.table(text='switch	 value 		lower 	upper 	optimise
-ling.Linf	         180	      80     200        0
-ling.k	          90	       60      100        1
-ling.bbin	         6	   1e-08    100        1
-ling.mult	         100	     0.1      100        1
-ling.age2	         35	    0.01     150        1
-ling.age3	         25	    0.01     120        1
-ling.age4	         15	   0.001     100        1
-ling.age5	          7	  0.0001     100        1
-ling.age6	          7	   1e-05     100        1
-ling.age7	          5	   1e-08     100        1
-ling.age8	          5	   1e-10     100        1
-ling.age9	         25	   1e-12     100        1
-ling.age10	         10	   1e-15     100        1
-ling.mat1	          70	      10      200        1
-ling.mat2	          100	      60      150        1',header=TRUE) 
+ghlmale.Linf	         90	      80     200        0
+ghlmale.k	          90	       60      100        1
+ghlmale.bbin	         6	   1e-08    100        1
+ghlmale.mult	         100	     0.1      100        1
+ghlfemale.Linf	         120	      80     200        0
+ghlfemale.k	          90	       60      100        1
+ghlfemale.bbin	         6	   1e-08    100        1
+ghlfemale.mult	         100	     0.1      100        1
+ghlmale.age2	         35	    0.01     150        1
+ghlmale.age3	         25	    0.01     120        1
+ghlmale.age4	         15	   0.001     100        1
+ghlmale.age5	          7	  0.0001     100        1
+ghlmale.age6	          7	   1e-05     100        1
+ghlmale.age7	          5	   1e-08     100        1
+ghlmale.age8	          5	   1e-10     100        1
+ghlmale.age9	         25	   1e-12     100        1
+ghlmale.age10	         10	   1e-15     100        1
+ghlmale.age11	         10	   1e-15     100        1
+ghlmale.age12	         10	   1e-15     100        1
+ghlmale.age13	         10	   1e-15     100        1
+ghlmale.age14	         10	   1e-15     100        1
+ghlmale.age15	         10	   1e-15     100        1
+ghlmale.age16	         10	   1e-15     100        1
+ghlmale.age17	         10	   1e-15     100        1
+ghlmale.age18	         10	   1e-15     100        1
+ghlfemale.age2	         35	    0.01     150        1
+ghlfemale.age3	         25	    0.01     120        1
+ghlfemale.age4	         15	   0.001     100        1
+ghlfemale.age5	          7	  0.0001     100        1
+ghlfemale.age6	          7	   1e-05     100        1
+ghlfemale.age7	          5	   1e-08     100        1
+ghlfemale.age8	          5	   1e-10     100        1
+ghlfemale.age9	         25	   1e-12     100        1
+ghlfemale.age10	         10	   1e-15     100        1
+ghlfemale.age11	         10	   1e-15     100        1
+ghlfemale.age12	         10	   1e-15     100        1
+ghlfemale.age13	         10	   1e-15     100        1
+ghlfemale.age14	         10	   1e-15     100        1
+ghlfemale.age15	         10	   1e-15     100        1
+ghlfemale.age16	         10	   1e-15     100        1
+ghlfemale.age17	         10	   1e-15     100        1
+ghlfemale.age18	         10	   1e-15     100        1',header=TRUE) 
 
 init.params$switch <- rownames(init.params)
 
@@ -126,7 +153,9 @@ init.params[grepl('rec[0-9]',init.params$switch),'upper'] <- 4
 init.params[grepl('rec[0-9]',init.params$switch),'lower'] <- 0.001
 init.params[grepl('rec[0-9]',init.params$switch),'optimise'] <- 1
 
-init.params['ling.recl',-1] <- c(12, 4, 20,1)
+init.params['ghlmale.recl',-1] <- c(12, 4, 20,1)
+
+init.params['ghlfemale.recl',-1] <- c(12, 4, 20,1)
 
 init.params[grepl('alpha',init.params$switch),'value'] <- 0.5
 init.params[grepl('alpha',init.params$switch),'upper'] <- 3
