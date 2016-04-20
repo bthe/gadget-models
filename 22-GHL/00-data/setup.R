@@ -5,7 +5,7 @@ gd <- gadget_directory("../01-GHL-NWWG")
 mdb<-mfdb('Iceland')
 
 year_range <- 1982:2016
-stock.names <- c('ghlfem','ghlmale')
+stock.names <- c('ghlfemale','ghlmale')
 
 reitmapping <- 
   read.table(
