@@ -14,6 +14,27 @@ ghl.landings <-
   select(-Total) %>% 
   gather(who,catch,-Year)
 
+
+new.landings <- 
+  read.csv('mfdb-setup/Data/ghlNewlandings.csv') %>% 
+  mutate(Area = as.numeric(gsub('27_([0-9]+).+$','\\1',Area))) %>% 
+  filter(!(Country %in% c('NO','IS')),
+         Area %in% c(5,6,12,14)) %>%
+  dplyr::rename(year = Year) %>% 
+  left_join(expand.grid(year=2015,month=1:12)) %>% 
+  mutate(sampling_type = 'FLND', 
+         species = 'GLH',
+         count = 1000*Catch/12,
+         gear = 'BMT', ## this needs serious consideration
+         areacell = 2741) %>% 
+  select(-c(AphiaID:Country,Catch)) %>% 
+  as.data.frame()
+
+mfdb_import_survey(mdb,
+                   data_source = 'ICES-interim-catch',
+                   new.landings)
+  
+
 ghl.landings %>% 
   ggplot(aes(Year,catch,fill=who)) + 
   geom_bar(stat='identity') + 

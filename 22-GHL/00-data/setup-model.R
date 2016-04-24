@@ -134,7 +134,6 @@ init.params[grepl('rec[0-9]',init.params$switch),'lower'] <- 0.001
 init.params[grepl('rec[0-9]',init.params$switch),'optimise'] <- 1
 
 init.params['ghlmale.recl',-1] <- c(12, 4, 20,1)
-
 init.params['ghlfemale.recl',-1] <- c(12, 4, 20,1)
 
 init.params[grepl('alpha',init.params$switch),'value'] <- 0.5
