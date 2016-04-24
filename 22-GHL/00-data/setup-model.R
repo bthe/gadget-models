@@ -54,16 +54,11 @@ opt$stocks$imm <-
                 beta='(* 10 #ghlmale.bbin)', binn=15,recl='#ghlmale.recl')
     weight <- c(a=weight.alpha, b=weight.beta)
     init.abund <- sprintf('(* 0.01 %s %s)',c(0,rep(1000,9),rep(100,3),70,60,20,1,exp(-0.1*1:8)),
-                          c(0,sprintf('#ghlmale.age%s',c(2:18,rep(18,7)))))
-    n <- sprintf('(* 1500 #ghl.rec%s)',year_range)
+                          c(0,sprintf('#ghl.age%s',c(2:18,rep(18,7)))))
+    n <- sprintf('(* #ghl.rec.mult #ghl.rec%s)',year_range)
     doesmature <- 0
     sigma <- c(rep(init.sigma$ms[2],5),tail(init.male$ms,9),rep(init.male$ms[10],15))
-      #list(alpha='( * 0.001 #mat1)',
-                            #      l50='#mat2', beta=0,
-                            #      a50=0)
-
-    ## using the same M-formulation as cod (is that a good idea, Muggur?)
-    M <- rep(0.1,25) #c(0.5,  0.35, 0.2, 0.2,  0.2, 0.2, 0.2, 0.2, 0.2, 0.3)
+    M <- rep(0.1,25)
       doesmove <- 0
     doesmigrate <- 0
     doesrenew <- 1
@@ -77,7 +72,7 @@ opt$stocks$fem <-
                 beta='(* 10 #ghlfemale.bbin)', binn=15,recl='#ghlfemale.recl')
     weight <- c(a=weight.alpha, b=weight.beta)
     init.abund <- sprintf('(* 0.01 %s %s)',c(0,rep(1000,9),rep(100,3),70,60,20,1,exp(-0.1*1:8)),
-                          c(0,sprintf('#ghlfemale.age%s',c(2:18,rep(18,7)))))
+                          c(0,sprintf('(* #ghl.age%1$s (exp (* %1$s (* -1 #ghl.F))))',c(2:18,rep(18,7)))))
   })
 
 
@@ -101,50 +96,35 @@ init.params <- read.gadget.parameters('params.out')
 
 init.params[c('ghlmale.Linf','ghlmale.k','ghlmale.bbin','ghl.mult',
               'ghlfemale.Linf','ghlfemale.k','ghlfemale.bbin',
+              'ghl.F','ghl.rec.mult',
               grep('age',rownames(init.params),value=TRUE)),] <- 
   read.table(text='switch	 value 		lower 	upper 	optimise
-ghlmale.Linf	         90	      80     200        0
-ghlmale.k	          90	       60      100        1
+ghlmale.Linf	         75	      60     200        0
+ghlmale.k	          90	       30      150        1
 ghlmale.bbin	         6	   1e-08    100        1
-ghlmale.mult	         100	     0.1      100        1
-ghlfemale.Linf	         120	      80     200        0
-ghlfemale.k	          90	       60      100        1
+ghl.mult	         100	     0.1      100        0
+ghlfemale.Linf	         110	      80     200        0
+ghlfemale.k	          90	       30      150        1
 ghlfemale.bbin	         6	   1e-08    100        1
-ghlfemale.mult	         100	     0.1      100        1
-ghlmale.age2	         35	    0.01     150        1
-ghlmale.age3	         25	    0.01     120        1
-ghlmale.age4	         15	   0.001     100        1
-ghlmale.age5	          7	  0.0001     100        1
-ghlmale.age6	          7	   1e-05     100        1
-ghlmale.age7	          5	   1e-08     100        1
-ghlmale.age8	          5	   1e-10     100        1
-ghlmale.age9	         25	   1e-12     100        1
-ghlmale.age10	         0.001	   1e-15     100        1
-ghlmale.age11	         0.001	   1e-15     100        1
-ghlmale.age12	         0.001	   1e-15     100        1
-ghlmale.age13	         0.001	   1e-15     100        1
-ghlmale.age14	         0.001	   1e-15     100        1
-ghlmale.age15	         0.001	   1e-15     100        1
-ghlmale.age16	         0.001	   1e-15     100        1
-ghlmale.age17	         0.001	   1e-15     100        1
-ghlmale.age18	         0.001	   1e-15     100        1
-ghlfemale.age2	         35	    0.01     150        1
-ghlfemale.age3	         25	    0.01     120        1
-ghlfemale.age4	         15	   0.001     100        1
-ghlfemale.age5	          7	  0.0001     100        1
-ghlfemale.age6	          7	   1e-05     100        1
-ghlfemale.age7	          5	   1e-08     100        1
-ghlfemale.age8	          5	   1e-10     100        1
-ghlfemale.age9	         25	   1e-12     100        1
-ghlfemale.age10	         0.001	   1e-15     100        1
-ghlfemale.age11	         0.001	   1e-15     100        1
-ghlfemale.age12	         0.001	   1e-15     100        1
-ghlfemale.age13	         0.001	   1e-15     100        1
-ghlfemale.age14	         0.001	   1e-15     100        1
-ghlfemale.age15	         0.001	   1e-15     100        1
-ghlfemale.age16	         0.001	   1e-15     100        1
-ghlfemale.age17	         0.001	   1e-15     100        1
-ghlfemale.age18	         0.001	   1e-15     100        1',header=TRUE) 
+ghl.F	         0.1	     0.04      0.3        1
+ghl.rec.mult     500      0.01     2000       0
+ghl.age2	         35	    0.01     150        1
+ghl.age3	         25	    0.01     120        1
+ghl.age4	         15	   0.001     100        1
+ghl.age5	          7	  0.0001     100        1
+ghl.age6	          7	   1e-05     100        1
+ghl.age7	          5	   1e-08     100        1
+ghl.age8	          5	   1e-10     100        1
+ghl.age9	         25	   1e-12     100        1
+ghl.age10	         0.001	   1e-15     100        1
+ghl.age11	         0.001	   1e-15     100        1
+ghl.age12	         0.001	   1e-15     100        1
+ghl.age13	         0.001	   1e-15     100        1
+ghl.age14	         0.001	   1e-15     100        1
+ghl.age15	         0.001	   1e-15     100        1
+ghl.age16	         0.001	   1e-15     100        1
+ghl.age17	         0.001	   1e-15     100        1
+ghl.age18	         0.001	   1e-15     100        1',header=TRUE) 
 
 init.params$switch <- rownames(init.params)
 

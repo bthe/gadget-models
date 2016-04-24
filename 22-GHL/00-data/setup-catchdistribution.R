@@ -1,12 +1,13 @@
 minage <- Rgadget:::getMinage(gm)
 maxage <- Rgadget:::getMaxage(gm)
-maxlength <- 120 #max(Rgadget:::getLengthgroups(gm))
+maxlength <- Rgadget:::getMaxlength(gm)
+minlength <- Rgadget:::getMinlength(gm)
 
 ## Query length data to create IGFS catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
   sampling_type = 'AUT',
   sex = 'M',
-  length = mfdb_interval("len", seq(0, maxlength, by = 2))),
+  length = mfdb_interval("len", seq(minlength, maxlength, by = 2))),
   defaults))
 
 attributes(aggdata[['0.0.0.0.0']])$age$all <- minage:maxage
@@ -24,7 +25,7 @@ rm(aggdata)
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
   sampling_type = 'AUT',
   sex = 'F',
-  length = mfdb_interval("len", seq(0, maxlength, by = 2))),
+  length = mfdb_interval("len", seq(minlength, maxlength, by = 2))),
   defaults))
 
 attributes(aggdata[['0.0.0.0.0']])$age$all <- minage:maxage
@@ -61,7 +62,7 @@ gadget_dir_write(gd,
 ## Query length data to create commercial catchdistribution components
 aggdata <- mfdb_sample_count(mdb, c('age', 'length'), c(list(
     sampling_type = c('SEA','FAER'),
-    length = mfdb_interval("len", seq(0, maxlength, by = 2))),
+    length = mfdb_interval("len", seq(minlength, maxlength, by = 2))),
                                                         defaults))
 attributes(aggdata[['0.0.0.0.0']])$age$all <- minage:maxage
 
@@ -78,7 +79,7 @@ aggdata <-
                       c(list(sampling_type = 'FAER',
                              sex = 'F',
                              age = mfdb_step_interval('age',by=1,from=1,to=15),
-                             length = mfdb_interval("len", seq(0, maxlength, by = 4))),
+                             length = mfdb_interval("len", seq(minlength, maxlength, by = 4))),
                         defaults))
 
 
@@ -97,7 +98,7 @@ aggdata <-
                     c(list(sampling_type = 'FAER',
                            sex = 'M',
                            age = mfdb_step_interval('age',by=1,from=1,to=15),
-                           length = mfdb_interval("len", seq(0, maxlength, by = 4))),
+                           length = mfdb_interval("len", seq(minlength, maxlength, by = 4))),
                       defaults))
 
 
