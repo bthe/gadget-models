@@ -1,5 +1,5 @@
 [simann]
-simanniter 10000 ; number of simulated annealing iterations
+simanniter 100000 ; number of simulated annealing iterations
 scale	  1 
 simanneps 1e-03 ; minimum epsilon, simann halt criteria
 t         300000   ; simulated annealing initial temperature

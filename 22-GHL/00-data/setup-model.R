@@ -104,11 +104,11 @@ init.params[c('ghlmale.Linf','ghlmale.k','ghlmale.bbin','ghl.mult',
               grep('age',rownames(init.params),value=TRUE)),] <- 
   read.table(text='switch	 value 		lower 	upper 	optimise
 ghlmale.Linf	         90	      80     200        0
-ghlmale.k	          90	       60      100        1
+ghlmale.k	          90	       30      100        1
 ghlmale.bbin	         6	   1e-08    100        1
-ghlmale.mult	         100	     0.1      100        1
+ghlmale.mult	         100	     0.1      100        0
 ghlfemale.Linf	         120	      80     200        0
-ghlfemale.k	          90	       60      100        1
+ghlfemale.k	          90	       30      100        1
 ghlfemale.bbin	         6	   1e-08    100        1
 ghlfemale.mult	         100	     0.1      100        1
 ghlmale.age2	         35	    0.01     150        1
@@ -154,7 +154,6 @@ init.params[grepl('rec[0-9]',init.params$switch),'lower'] <- 0.001
 init.params[grepl('rec[0-9]',init.params$switch),'optimise'] <- 1
 
 init.params['ghlmale.recl',-1] <- c(12, 4, 20,1)
-
 init.params['ghlfemale.recl',-1] <- c(12, 4, 20,1)
 
 init.params[grepl('alpha',init.params$switch),'value'] <- 0.5
